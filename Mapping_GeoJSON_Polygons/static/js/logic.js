@@ -20,9 +20,9 @@ let baseMaps = {
 
 // Create the map object with center at the San Francisco airport
 let map = L.map('mapid', {
-    center: [44.0, -80.0],
-    zoom: 2,
-    layers: [satellite] // default layer
+    center: [43.7, -79.3],
+    zoom: 11,
+    layers: [streets] // default layer
 });
 
 // Pass our map layers into layers control and add them to the map
@@ -31,9 +31,19 @@ L.control.layers(baseMaps).addTo(map);
 // Accessing the airport GeoJSON URL
 let torontoHoods = "https://raw.githubusercontent.com/jmoletteire/Mapping-Earthquakes/main/torontoNeighborhoods.json";
 
+let myStyle = {
+    color: 'blue',
+    weight: 1,
+    fillColor: '#ffffa1'
+};
 // Grabbing our GeoJSON data
 d3.json(torontoHoods).then(function(data) {
     // Creating a GeoJSON layer with the data
-    L.geoJSON(data).addTo(map);
+    L.geoJSON(data, {
+        style: myStyle,
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup(`<h2>Neighborhood: ${feature.properties.AREA_NAME}</h2>`);
+        }
+    }).addTo(map);
 });
 
